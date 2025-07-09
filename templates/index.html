@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BugTracker AI</title>
+</head>
+<body>
+    <h1>Bug Report Triage Assistant</h1>
+    <form method="post">
+        <textarea name="bug_text" rows="5" cols="50" placeholder="Enter bug report here..." required></textarea><br><br>
+        <input type="submit" value="Predict Priority">
+    </form>
+    {% if prediction %}
+        <h2>Predicted Priority: {{ prediction }}</h2>
+    {% endif %}
+</body>
+</html>
