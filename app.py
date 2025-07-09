@@ -11,15 +11,26 @@ vectorizer = pickle.load(open(vectorizer_path, "rb"))
 
 app = Flask(__name__)
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     prediction = None
+    proba = None
     if request.method == "POST":
-        bug_text = request.form["bug_text"]
-        vec = vectorizer.transform([bug_text])
-        pred = model.predict(vec)[0]
-        prediction = ["Low", "Medium", "High"][pred]
+        bug_text = request.form["bug_text"].strip()
+        vec_input = vectorizer.transform([bug_text])
+        if vec_input.nnz == 0:
+            prediction = "Unrecognized or gibberish input"
+        else:
+            pred = model.predict(vec_input)[0]
+            proba = model.predict_proba(vec_input)[0]
+            prediction = ["Low", "Medium", "High"][pred]
+            print(f"Proba: {proba}")
+
+
+
     return render_template("index.html", prediction=prediction)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
